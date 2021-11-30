@@ -2,7 +2,7 @@
 
 在web开发的过程当中，当对外提供的接口可以被随意调用时，可能存在非法用户可以对咱们的服务器进行恶意攻击，致使服务器不能有效处理正常的业务请求，所以须要考虑对这些暴露出去的http接口作防刷限制。其中一个行之有效的方法就是给对外接口加验证身份的签名（即验签）。具体到业务中，当调用者B请求调用服务者A的接口时，服务者A须要验证调用者B的身份，并经过签名来验证调用者的身份，整个流程大体如下：
 
-<a href="http://image.easyblog.top/16382389875331bfc0d91-12e2-4562-b7cd-00bed63a428b.png><img src="http://image.easyblog.top/16382389875331bfc0d91-12e2-4562-b7cd-00bed63a428b.png></a>
+<a href="http://image.easyblog.top/16382389875331bfc0d91-12e2-4562-b7cd-00bed63a428b.png"><img src="http://image.easyblog.top/16382389875331bfc0d91-12e2-4562-b7cd-00bed63a428b.png"/></a>
 
 ## ⭐️ 1、快速开始
 ### 1.1 引入依赖
