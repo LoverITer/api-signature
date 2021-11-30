@@ -25,7 +25,7 @@ application.signature.hash-type  #使用何种摘要算法，目前支持MD5、S
 ```
 
 ### 1.3 注册验签拦截器
-在项目中实现spring mvc提供的`WebMvcConfigurer`接口并实现方法`addInterceptor(InterceptorRestry)`注册验签拦截器
+在项目中实现Spring MVC提供的`WebMvcConfigurer`接口并实现方法`addInterceptor(InterceptorRegistry)`注册验签拦截器
 ```java
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
