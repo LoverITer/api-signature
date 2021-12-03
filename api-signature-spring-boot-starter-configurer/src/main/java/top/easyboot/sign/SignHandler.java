@@ -35,7 +35,29 @@ public interface SignHandler {
         throw new UnsupportedOperationException("method should be implemented by subclasses");
     }
 
+    /**
+     * 系统根据自己的secret和app_id生成请求其他系统的验签值
+     *
+     * @param signEntity
+     * @return
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    default String generateRequestSign(SignEntity signEntity) throws InvocationTargetException, IllegalAccessException {
+        Map<String, Collection<String>> pathParams = signEntity.getPathParams();
+        pathParams.put(Constants.APP_ID, Lists.newArrayList(getAppId()));
+        pathParams.put(Constants.SECRET, Lists.newArrayList(getSecret()));
+        return generateSign(signEntity);
+    }
 
+    /**
+     * 计算验签值
+     *
+     * @param signEntity
+     * @return
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
     default String generateSign(SignEntity signEntity) throws InvocationTargetException, IllegalAccessException {
         StringBuilder appender = new StringBuilder(String.format("%s %s?", signEntity.getMethod(), signEntity.getPath()));
         Map<String, Collection<String>> pathParams = signEntity.getPathParams();
