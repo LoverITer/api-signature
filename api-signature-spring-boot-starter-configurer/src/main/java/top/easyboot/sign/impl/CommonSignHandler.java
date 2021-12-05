@@ -41,7 +41,7 @@ public class CommonSignHandler implements SignHandler {
         }
         Signature signature = signatureMapper.selectByAppId(appId);
         if(Objects.isNull(signature)){
-            throw new SignatureArgumentException(String.format("Can not found signature record by app_id[%s]",appId));
+            throw new SignatureArgumentException(String.format("Invalid app_id[%s]",appId));
         }
         return signature.getSecret();
     }

@@ -32,12 +32,12 @@ import top.easyboot.sign.impl.CommonSignHandler;
 )
 public class ApiSignatureAutoConfigurer {
 
-    private final ApiSignatureProperties signatureProperties;
+    private final ApiSignatureProperties properties;
 
     private final SignatureMapper signatureMapper;
 
     public ApiSignatureAutoConfigurer(ApiSignatureProperties signatureProperties,SignatureMapper signatureMapper) {
-        this.signatureProperties = signatureProperties;
+        this.properties = signatureProperties;
         this.signatureMapper=signatureMapper;
     }
 
@@ -45,7 +45,7 @@ public class ApiSignatureAutoConfigurer {
     @Bean(value = "defaultSignHandler")
     @ConditionalOnMissingBean(CommonSignHandler.class)
     public SignHandler signHandler() {
-        CommonSignHandler commonSignHandler = new CommonSignHandler(signatureProperties,signatureMapper);
+        CommonSignHandler commonSignHandler = new CommonSignHandler(properties,signatureMapper);
         log.info("Registered the default sign handler[{}] to Spring container successfully.", commonSignHandler.getClass().getTypeName());
         return commonSignHandler;
     }
@@ -54,7 +54,7 @@ public class ApiSignatureAutoConfigurer {
     @ConditionalOnMissingBean
     public SignInterceptor signInterceptor(SignHandler defaultSignHandler) {
         CommonSignInterceptor signInterceptor = null;
-        if (signatureProperties.isEnable()) {
+        if (properties.isEnable()) {
             signInterceptor = new CommonSignInterceptor(defaultSignHandler);
             log.info("Registered the default sign interceptor[{}] to Spring container successfully.", signInterceptor.getClass().getTypeName());
         }

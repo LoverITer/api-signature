@@ -2,6 +2,7 @@ package top.easyboot.handler;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -23,12 +24,7 @@ public abstract class SignInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
-        try {
-            return handler().checkSign(getRequestEntity(request));
-        } catch (Throwable e) {
-            log.error("SignInterceptor>>>>>>>>{}", e.getMessage());
-            throw e;
-        }
+        return HttpStatus.valueOf(response.getStatus()).isError() || this.handler().checkSign(this.getRequestEntity(request));
     }
 
 
