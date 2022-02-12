@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author: frank.huang
@@ -35,7 +36,7 @@ public enum HashAlgorithm {
             throw new IllegalArgumentException("invalid hash algorithm");
         }
         if (contains(hashType)) {
-            return Arrays.stream(HashAlgorithm.values()).filter(type -> type.getHashType().equalsIgnoreCase(hashType)).findAny().orElse(null);
+            return Arrays.stream(HashAlgorithm.values()).filter(type -> Objects.requireNonNull(type.getHashType()).equalsIgnoreCase(hashType)).findAny().orElse(null);
         }
         return null;
     }

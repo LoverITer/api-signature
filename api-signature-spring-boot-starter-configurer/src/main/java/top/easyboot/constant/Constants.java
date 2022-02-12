@@ -34,9 +34,6 @@ public final class Constants {
     public static final String LOCAL_HOST="localhost";
     public static final String LOOPBACK_ADDRESS="127.0.0.1";
 
-    //缓存类
-    public static final String REDIS_USER_KEY = "easyblog-cli:user:name:%s";
-
     //时间
     public static final long TEN_MINUS = 10*60*1000;
 }

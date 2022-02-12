@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import top.easyboot.constant.Constants;
+import top.easyboot.enums.HashAlgorithm;
 import top.easyboot.exception.SignatureArgumentException;
 import top.easyboot.exception.SignatureException;
 import top.easyboot.util.SignUtils;
@@ -20,19 +21,12 @@ import java.util.Objects;
  */
 public interface SignHandler {
 
+    String getSecret();
 
-    default String getSecret() {
-        throw new UnsupportedOperationException("method should be implemented by subclasses");
-    }
-
-    String getSecretByAppId(String appId);
-
-    default String getAppId() {
-        throw new UnsupportedOperationException("method should be implemented by subclasses");
-    }
+    String getAppId();
 
     default String getHashAlgorithm() {
-        throw new UnsupportedOperationException("method should be implemented by subclasses");
+        return HashAlgorithm.SHA256.getHashType();
     }
 
     /**
@@ -46,7 +40,6 @@ public interface SignHandler {
     default String generateRequestSign(SignEntity signEntity) throws InvocationTargetException, IllegalAccessException {
         Map<String, Collection<String>> pathParams = signEntity.getPathParams();
         pathParams.put(Constants.APP_ID, Lists.newArrayList(getAppId()));
-        pathParams.put(Constants.SECRET, Lists.newArrayList(getSecret()));
         return generateSign(signEntity);
     }
 
@@ -78,29 +71,24 @@ public interface SignHandler {
             throw new SignatureArgumentException("sign entity can not be null");
         }
         Map<String, Collection<String>> params = signEntity.getPathParams();
-        checkAndGetSignParam(Constants.TIMESTAMP, params);
-        String appId = checkAndGetSignParam(Constants.APP_ID, params);
-        String oldSign = checkAndGetSignParam(Constants.SIGN, params);
-        params.put(Constants.SECRET, Lists.newArrayList(getSecretByAppId(appId)));
+        querySignParam(Constants.TIMESTAMP, params);
+        String oldSign = querySignParam(Constants.SIGN, params);
+        params.put(Constants.SECRET, Lists.newArrayList(getSecret()));
         signEntity.setPathParams(params);
         String newSign = generateSign(signEntity);
-        if (!oldSign.equals(newSign)) {
+        if (Boolean.FALSE.equals(oldSign.equals(newSign))) {
             throw new SignatureException("sign invalid");
         }
         return true;
     }
 
-    default String checkAndGetSignParam(String name, Map<String, Collection<String>> params) {
+    default String querySignParam(String name, Map<String, Collection<String>> params) {
         Collection<String> paramCollection = params.get(name);
-        if (CollectionUtils.isEmpty(paramCollection)) {
-            throw new SignatureArgumentException(String.format("Required parameter '%s' is not present", name));
-        }
-        Object[] paramArray = paramCollection.toArray();
-        if (paramArray.length == 0) {
-            throw new SignatureArgumentException(String.format("Required parameter '%s' is not present", name));
-        }
-        String paramValue = (String) paramArray[0];
-        if (StringUtils.isBlank(paramValue)) {
+        Object[] paramArray = null;
+        String paramValue = null;
+        if (CollectionUtils.isEmpty(paramCollection) ||
+                (paramArray = paramCollection.toArray()).length == 0 ||
+                StringUtils.isBlank((paramValue = (String) paramArray[0]))) {
             throw new SignatureArgumentException(String.format("Required parameter '%s' is not present", name));
         }
 

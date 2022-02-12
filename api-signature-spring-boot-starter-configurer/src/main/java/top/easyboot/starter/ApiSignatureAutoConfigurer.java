@@ -9,7 +9,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import top.easyboot.dao.auto.mapper.SignatureMapper;
 import top.easyboot.handler.CommonSignInterceptor;
 import top.easyboot.handler.SignInterceptor;
 import top.easyboot.sign.SignHandler;
@@ -34,18 +33,15 @@ public class ApiSignatureAutoConfigurer {
 
     private final ApiSignatureProperties properties;
 
-    private final SignatureMapper signatureMapper;
-
-    public ApiSignatureAutoConfigurer(ApiSignatureProperties signatureProperties,SignatureMapper signatureMapper) {
+    public ApiSignatureAutoConfigurer(ApiSignatureProperties signatureProperties) {
         this.properties = signatureProperties;
-        this.signatureMapper=signatureMapper;
     }
 
 
     @Bean(value = "defaultSignHandler")
     @ConditionalOnMissingBean(CommonSignHandler.class)
     public SignHandler signHandler() {
-        CommonSignHandler commonSignHandler = new CommonSignHandler(properties,signatureMapper);
+        CommonSignHandler commonSignHandler = new CommonSignHandler(properties);
         log.info("Registered the default sign handler[{}] to Spring container successfully.", commonSignHandler.getClass().getTypeName());
         return commonSignHandler;
     }
