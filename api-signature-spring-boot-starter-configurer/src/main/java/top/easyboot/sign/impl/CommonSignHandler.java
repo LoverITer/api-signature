@@ -6,6 +6,8 @@ import top.easyboot.exception.SignatureArgumentException;
 import top.easyboot.sign.SignHandler;
 import top.easyboot.starter.ApiSignatureProperties;
 
+import java.util.Set;
+
 /**
  * @author: frank.huang
  * @date: 2021-11-13 15:34
@@ -35,6 +37,11 @@ public class CommonSignHandler implements SignHandler {
             throw new SignatureArgumentException("Can not find parameter 'app_id',consider config it in config file");
         }
         return appId;
+    }
+
+    @Override
+    public Set<String> excludes() {
+        return signatureProperties.getExcludes();
     }
 
     @Override

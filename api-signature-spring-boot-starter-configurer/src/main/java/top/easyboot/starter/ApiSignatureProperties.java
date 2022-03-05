@@ -3,6 +3,9 @@ package top.easyboot.starter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import top.easyboot.enums.HashAlgorithm;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author: frank.huang
  * @date: 2021-11-27 20:21
@@ -17,6 +20,11 @@ public class ApiSignatureProperties {
      * {@link HashAlgorithm}
      */
     private String hashType = HashAlgorithm.SHA256.getHashType();
+
+    /**
+     * 排除验签的接口
+     */
+    private final Set<String> excludes = new HashSet<>();
 
     public ApiSignatureProperties() {
     }
@@ -51,6 +59,10 @@ public class ApiSignatureProperties {
 
     public void setHashType(String hashType){
         this.hashType=hashType;
+    }
+
+    public Set<String> getExcludes() {
+        return excludes;
     }
 }
 
